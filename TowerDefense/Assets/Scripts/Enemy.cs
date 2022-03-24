@@ -11,7 +11,8 @@ public class Enemy : MonoBehaviour
     public int coins = 3;
 
     public List<Transform> waypointList;
-
+    public Transform target;
+    
     private int targetWaypointIndex;
     // todo #1 set up properties
     //   health, speed, coin worth
