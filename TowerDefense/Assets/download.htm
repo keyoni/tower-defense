@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang='en-us'>
+<head>
+  <meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+
+<title>
+  
+    Tangram Heightmapper · Mapzen
+  
+</title>
+
+<meta name='description' content='This view also reveals surface details which aren&#39;t easily visible even in a 3D model. By turning up the contrast on the data, it provides glimpses into ...'>
+
+
+<meta name='twitter:card' content='summary_large_image'>
+<meta name='twitter:site' content='@mapzen'>
+
+   
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <meta name='twitter:creator' content='@meetar'>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  
+
+<meta name='twitter:title' content='Tangram Heightmapper'>
+<meta name='twitter:description' content='This view also reveals surface details which aren&#39;t easily visible even in a 3D model. By turning up the contrast on the data, it provides glimpses into the deep history of the landscape, hidden in small differences in the terrain.'>
+<meta name='twitter:image' content='/assets/images/tangram-heightmapper/diablo960x400.jpg'>
+
+
+<link rel='apple-touch-icon' href='/assets/common/styleguide/images/favicons/apple-touch-icon.png' sizes='180x180'>
+<link rel='icon' type='image/png' href='/assets/common/styleguide/images/favicons/favicon-16x16.png' sizes='16x16'>
+<link rel='icon' type='image/png' href='/assets/common/styleguide/images/favicons/favicon-32x32.png' sizes='32x32'>
+<link rel='manifest' href='/assets/common/styleguide/images/favicons/manifest.json'>
+<link rel='mask-icon' href='/assets/common/styleguide/images/favicons/safari-pinned-tab.svg' color='#2C1E3F'>
+
+<link rel='stylesheet' href='/stylesheets/pygments.css' type='text/css'>
+<link rel='stylesheet' href='/assets/common/styleguide/styles/website.min.css?1624544694359593085' type='text/css'>
+<link rel='canonical' href='https://mapzen.com/blog/tangram-heightmapper'>
+
+
+  <link rel='alternate' type='application/atom+xml' title='Mapzen (Atom)' href='/atom.xml'>
+  <link rel='alternate' type='application/rss+xml' title='Mapzen (RSS)' href='/rss.xml'>
+
+
+<!-- start Mixpanel --><script type="text/javascript">(function(e,a){if(!a.__SV){var b=window;try{var c,l,i,j=b.location,g=j.hash;c=function(a,b){return(l=a.match(RegExp(b+"=([^&]*)")))?l[1]:null};g&&c(g,"state")&&(i=JSON.parse(decodeURIComponent(c(g,"state"))),"mpeditor"===i.action&&(b.sessionStorage.setItem("_mpcehash",g),history.replaceState(i.desiredHash||"",e.title,j.pathname+j.search)))}catch(m){}var k,h;window.mixpanel=a;a._i=[];a.init=function(b,c,f){function e(b,a){var c=a.split(".");2==c.length&&(b=b[c[0]],a=c[1]);b[a]=function(){b.push([a].concat(Array.prototype.slice.call(arguments,
+0)))}}var d=a;"undefined"!==typeof f?d=a[f]=[]:f="mixpanel";d.people=d.people||[];d.toString=function(b){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);b||(a+=" (stub)");return a};d.people.toString=function(){return d.toString(1)+".people (stub)"};k="disable time_event track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config reset people.set people.set_once people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");
+for(h=0;h<k.length;h++)e(d,k[h]);a._i.push([b,c,f])};a.__SV=1.2;b=e.createElement("script");b.type="text/javascript";b.async=!0;b.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";c=e.getElementsByTagName("script")[0];c.parentNode.insertBefore(b,c)}})(document,window.mixpanel||[]);
+mixpanel.init("214dee7834f4d1f4740fcd5f15f38152");</script><!-- end Mixpanel -->
+
+
+</head>
+<body class='default'>
+  <nav class='navbar navbar-default navbar-fixed-top' role='navigation'>
+  <div class='container-fluid'>
+    <div class='navbar-header'>
+      <button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#navbar-menu'>
+        <span class='sr-only'>Toggle navigation</span>
+        <span class='icon-bar top-bar'></span>
+        <span class='icon-bar middle-bar'></span>
+        <span class='icon-bar bottom-bar'></span>
+      </button>
+      <a class='navbar-brand' href='/'>
+        <div class='mapzen-logo'></div>
+        <h1 class='sr-only'>Mapzen</h1>
+      </a>
+    </div>
+    <!-- new nav bar showing user's login status -->
+    <div class='collapse navbar-collapse' id='navbar-menu'>
+      <ul class='nav navbar-nav navbar-left'>
+        <li class='inactive'><a href='/projects/'>Projects</a></li>
+        <li class='inactive'><a href='/documentation/'>Documentation</a></li>
+        <!--<li class='inactive'><a href='/pricing/'>Pricing</a></li>-->
+        <li class='active'><a href='/blog/'>Blog</a></li>
+      </ul>
+<!--
+      <ul class='nav navbar-nav navbar-right'>
+        <li class="inactive dropdown"><a id='sign-in' href='/developers/sign_in'> </a></li>
+        <li class="inactive"><a id='sign-up' href='/developers/sign_up'> </a></li>
+      </ul>
+ -->
+    </div>
+  </div>
+</nav>
+
+
+  <div class='gallery ' id='gallery'>
+  <img class='gallery-image' id='gallery-image' alt='' sizes='100vw'>
+  <script>
+    (function () {
+      var el = document.getElementById('gallery-image')
+      var l = 12 // Number of images
+      var d = new Date()
+      var t = Math.floor(d.getMinutes() / 5) % l // every five minutes
+      el.src = '/gallery/g{i}-sm.jpg'.replace(/\{i\}/, t)
+      el.srcset = '/gallery/g{i}-sm.jpg 600w, /gallery/g{i}-md.jpg 1300w, /gallery/g{i}-lg.jpg'.replace(/\{i\}/g, t)
+    }())
+  </script>
+</div>
+  <div class='container' id='content'>
+    
+
+    
+<div class='row text-center headroom-large hidden-print'>
+  <div class='col-xs-12'>
+    <a class='btn btn-default btn-transparent' href='/blog'><i class='fa fa-angle-left'></i>&nbsp; blog</a>
+  </div>
+</div>
+
+
+
+<div class='row headroom-large'>
+  <div class='col-md-8 col-md-offset-2'>
+    <h2 class='no-margin text-center'>Tangram Heightmapper</h2>
+    
+    
+      <ul class="tag-list headroom">
+        
+          <a href='/tag/tangram'><li>tangram</li></a>
+        
+          <a href='/tag/terrain-tiles'><li>terrain-tiles</li></a>
+        
+          <a href='/tag/terrain'><li>terrain</li></a>
+        
+      </ul>
+    
+
+    <div class=''>
+      
+    </div>
+
+    <div class='static-content headroom-large blog-content'>
+      <p>Mapzen <a href="https://mapzen.com/blog/elevation/">recently released</a> a whole lot of high-quality open-source terrain data in the form of a pair of global tilesets, using raster images to store the elevation and slope of the surface of the earth.</p>
+
+<p>I&rsquo;ve previously described <a href="https://mapzen.com/blog/mapping-mountains">some ways to render this data</a> in a 2D context, but it can also be used to generate 3D models, like this one of Mt. Diablo in California:</p>
+
+<p><img src="/assets/images/tangram-heightmapper/diablo960x400.jpg" alt="3d print of Mt. Diablo"></p>
+
+<p>I made a viewer called <a href="https://tangrams.github.io/heightmapper">Heightmapper</a> to browse the terrain tiles and create heightmaps from them, which are grayscale images of terrain data.</p>
+
+<p>Here&rsquo;s the above view in the Heightmapper, roughly (the printed model is south-side-up):</p>
+
+<p><a target="_blank" href="https://tangrams.github.io/heightmapper/#13.58529/37.8835/-121.9163"><img alt="mount diablo heightmap" src="/assets/images/tangram-heightmapper/diablo_crop.jpg"></a>
+<span class='caption'>( <a style="font-weight:normal" href="https://tangrams.github.io/heightmapper/#13.58529/37.8835/-121.9163" target="_blank">Open full screen ➹</a> )</span></p>
+
+<p>A heightmap like this one can be turned into a 3D model by using it as a &ldquo;<a href="https://en.wikipedia.org/wiki/Displacement_mapping">displacement map</a>&rdquo;, which displaces the vertices of a 3D mesh according to the brightness of each pixel, like this:</p>
+
+<p><img src="/assets/images/tangram-heightmapper/mountain_grow.gif" alt="displacement map"></p>
+
+<p>By default, Heightmapper is in &ldquo;auto-exposure&rdquo; mode, to ensure that the current view&rsquo;s elevation values are spread out over every gray in the grayscale. This mode checks the highest and lowest values in the current view, and sets the levels to make use of the full tonal range.</p>
+
+<p>To aid in scaling the resulting models, a &ldquo;scale factor&rdquo; in Heightmapper&rsquo;s control panel shows the vertical range of the current view, expressed as a ratio in terms of the view&rsquo;s width. When you export, use this factor to determine how tall your model should be on the z-axis. (I made <a href="https://github.com/tangrams/heightmapper/blob/gh-pages/exporting_to_blender.md">a brief tutorial for doing this in Blender</a>, a popular but confusing open-source 3D application.)</p>
+
+<h3 id="blame-it-on-terrain">Blame it on Terrain</h3>
+
+<p>This view also reveals surface details which aren&rsquo;t easily visible even in a 3D model. By turning up the contrast on the data, it provides glimpses into the deep history of the landscape, hidden in small differences in the terrain. For example:</p>
+
+<p>The prehistoric coastlines of the <a href="https://en.wikipedia.org/wiki/Great_Lakes#Geology">Great Lakes</a>:</p>
+
+<p><a target="_blank" href="https://tangrams.github.io/heightmapper/#7.65371/41.215/-86.154"><img alt="great lakes heightmap" src="/assets/images/tangram-heightmapper/great_lakes.jpg"></a>
+<span class='caption'>( <a style="font-weight:normal" href="https://tangrams.github.io/heightmapper/#7.65371/41.215/-86.154" target="_blank">Open full screen ➹</a> )</span></p>
+
+<p>The folded mountains which give shape to the <a href="https://en.wikipedia.org/wiki/Three_Gorges">Three Gorges</a>:</p>
+
+<p><a target="_blank" href="https://tangrams.github.io/heightmapper/#8.49583/31.4034/109.0664"><img alt="three gorges heightmap" src="/assets/images/tangram-heightmapper/three_gorges.jpg"></a>
+<span class='caption'>( <a style="font-weight:normal" href="https://tangrams.github.io/heightmapper/#8.49583/31.4034/109.0664" target="_blank"> Open full screen ➹</a> )</span></p>
+
+<p>The fractal boundary between watersheds in central India:</p>
+
+<p><a target="_blank" href="https://tangrams.github.io/heightmapper/#9/18.7737/75.6450"><img alt="india watersheds heightmap" src="/assets/images/tangram-heightmapper/india_watersheds.jpg"></a>
+<span class='caption'>( <a style="font-weight:normal" href="https://tangrams.github.io/heightmapper/#9/18.7737/75.6450" target="_blank"> Open full screen ➹</a> )</span></p>
+
+<p>The overlapping former paths of the Mississippi, now bounded by levees:</p>
+
+<p><a target="_blank" href="https://tangrams.github.io/heightmapper/#12.02403/33.6859/-91.1265"><img alt="mississippi heightmap" src="/assets/images/tangram-heightmapper/mississippi.jpg"></a>
+<span class='caption'>( <a style="font-weight:normal" href="https://tangrams.github.io/heightmapper/#12.02403/33.6859/-91.1265" target="_blank"> Open full screen ➹</a> )</span></p>
+
+<p>Check out the Heightmapper code or fork it at the <a href="http://github.com/tangrams/heightmapper">github repo</a>.</p>
+
+    </div>
+
+    
+
+    <div class='headroom-large footroom-large text-center hidden-print'>
+      <div class='social-buttons hidden-print'>
+  <ul>
+    <li class='social-button social-button-twitter'>
+      
+      <a href='http://twitter.com/home?status=Tangram Heightmapper%20@mapzen%20https://mapzen.com/blog/tangram-heightmapper' class='social-popup' title='Twitter'>
+        <span class='icon'>
+          <svg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px'
+             width='28px' height='28px' viewBox='0 0 28 28' enable-background='new 0 0 28 28' xml:space='preserve'>
+          <path d='M24.253,8.756C24.689,17.08,18.297,24.182,9.97,24.62c-3.122,0.162-6.219-0.646-8.861-2.32
+            c2.703,0.179,5.376-0.648,7.508-2.321c-2.072-0.247-3.818-1.661-4.489-3.638c0.801,0.128,1.62,0.076,2.399-0.155
+            C4.045,15.72,2.215,13.6,2.115,11.077c0.688,0.275,1.426,0.407,2.168,0.386c-2.135-1.65-2.729-4.621-1.394-6.965
+            C5.575,7.816,9.54,9.84,13.803,10.071c-0.842-2.739,0.694-5.64,3.434-6.482c2.018-0.623,4.212,0.044,5.546,1.683
+            c1.186-0.213,2.318-0.662,3.329-1.317c-0.385,1.256-1.247,2.312-2.399,2.942c1.048-0.106,2.069-0.394,3.019-0.851
+            C26.275,7.229,25.39,8.196,24.253,8.756z' />
+          </svg>
+        </span>
+        <span class='sr-only'>twitter</span>
+      </a>
+    </li>
+    <li class='social-button social-button-facebook'>
+      
+      <a href='https://www.facebook.com/sharer/sharer.php?u=https://mapzen.com/blog/tangram-heightmapper' class='social-popup' title='Facebook'>
+        <span class='icon'>
+          <svg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='28px' height='28px' viewBox='0 0 28 28' enable-background='new 0 0 28 28' xml:space='preserve'>
+            <path d='M27.825,4.783c0-2.427-2.182-4.608-4.608-4.608H4.783c-2.422,0-4.608,2.182-4.608,4.608v18.434
+              c0,2.427,2.181,4.608,4.608,4.608H14V17.379h-3.379v-4.608H14v-1.795c0-3.089,2.335-5.885,5.192-5.885h3.718v4.608h-3.726
+              c-0.408,0-0.884,0.492-0.884,1.236v1.836h4.609v4.608h-4.609v10.446h4.916c2.422,0,4.608-2.188,4.608-4.608V4.783z' />
+          </svg>
+        </span>
+        <span class='sr-only'>facebook</span>
+      </a>
+    </li>
+    <li class='social-button social-button-pinterest'>
+      
+      <a href='http://pinterest.com/pin/create/button/?url=https://mapzen.com/blog/tangram-heightmapper&amp;media=/assets/images/tangram-heightmapper/diablo960x400.jpg&amp;description=Tangram Heightmapper' class='social-popup' title='Pinterest'>
+        <span class='icon'>
+          <svg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='28px' height='28px' viewBox='0 0 28 28' enable-background='new 0 0 28 28' xml:space='preserve'>
+          <path d='M14.021,1.57C6.96,1.57,1.236,7.293,1.236,14.355c0,7.062,5.724,12.785,12.785,12.785c7.061,0,12.785-5.725,12.785-12.785
+            C26.807,7.294,21.082,1.57,14.021,1.57z M15.261,18.655c-1.161-0.09-1.649-0.666-2.559-1.219c-0.501,2.626-1.113,5.145-2.925,6.458
+            c-0.559-3.971,0.822-6.951,1.462-10.116c-1.093-1.84,0.132-5.545,2.438-4.632c2.837,1.123-2.458,6.842,1.099,7.557
+            c3.711,0.744,5.227-6.439,2.925-8.775c-3.325-3.374-9.678-0.077-8.897,4.754c0.19,1.178,1.408,1.538,0.489,3.168
+            C7.165,15.378,6.53,13.7,6.611,11.462c0.131-3.662,3.291-6.227,6.46-6.582c4.007-0.448,7.771,1.474,8.29,5.239
+            c0.579,4.255-1.816,8.865-6.102,8.533L15.261,18.655z' />
+          </svg>
+        </span>
+        <span class='sr-only'>pinterest</span>
+      </a>
+    </li>
+    <li class='social-button social-button-email'>
+      
+      <a href='mailto:?subject=Tangram Heightmapper&amp;body=https://mapzen.com/blog/tangram-heightmapper' class='social-popup' title='E-mail'>
+        <span class='icon'>
+          <svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' x='0px' y='0px' width='28px' height='28px' viewBox='0 0 28 28' enable-background='new 0 0 28 28' xml:space='preserve'><g><path d='M20.111 26.147c-2.336 1.051-4.361 1.401-7.125 1.401c-6.462 0-12.146-4.633-12.146-12.265 c0-7.94 5.762-14.833 14.561-14.833c6.853 0 11.8 4.7 11.8 11.252c0 5.684-3.194 9.265-7.399 9.3 c-1.829 0-3.153-0.934-3.347-2.997h-0.077c-1.208 1.986-2.96 2.997-5.023 2.997c-2.532 0-4.361-1.868-4.361-5.062 c0-4.749 3.504-9.071 9.111-9.071c1.713 0 3.7 0.4 4.6 0.973l-1.169 7.203c-0.388 2.298-0.116 3.3 1 3.4 c1.673 0 3.773-2.102 3.773-6.58c0-5.061-3.27-8.994-9.303-8.994c-5.957 0-11.175 4.673-11.175 12.1 c0 6.5 4.2 10.2 10 10.201c1.986 0 4.089-0.43 5.646-1.245L20.111 26.147z M16.646 10.1 c-0.311-0.078-0.701-0.155-1.207-0.155c-2.571 0-4.595 2.53-4.595 5.529c0 1.5 0.7 2.4 1.9 2.4 c1.441 0 2.959-1.828 3.311-4.087L16.646 10.068z' /></g></svg>
+        </span>
+        <span class='sr-only'>email</span>
+      </a>
+    </li>
+  </ul>
+</div>
+
+    </div>
+
+    
+      <div class='post-meta headroom text-center'>
+        
+          <div class='byline'>
+  <span class='byline-date no-top-margin'>13 September 2016</span>
+</div>
+
+<ul class='author-blurbs clearfix'>
+  
+    
+
+      
+      
+        
+      
+
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          <li class='author-blurb author-blurb-full-width'>
+<div class='author-blurb-portrait'>
+  <a href='https://twitter.com/meetar' class='no-print-link'>
+    <img class='avatar' src=' https://www.gravatar.com/avatar/04d271000e778be7cf77b37b62ff03a1 '>
+  </a>
+</div>
+
+<div class='author-blurb-text'>
+  <span class='byline-author'>
+    <a href='https://twitter.com/meetar' class='no-print-link'>Peter Richardson</a>
+  </span>
+  <p>Peter vexes vertices, flusters fragments, and pesters pixels on Mapzen's graphics team.</p>
+</div>
+</li>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+
+    
+  
+</ul>
+
+        
+      </div>
+    
+
+    
+    <div class='pagination headroom hidden-print'>
+      
+      <a class='pagination-link pagination-previous' href='/blog/a-routing-engine-of-ones-own'>
+        <i class='fa fa-fw fa-angle-left'></i>
+        <span class='pagination-link-text'>A Routing Engine Of One’s Own: DIY Valhalla</span>
+      </a>
+      
+      
+      <a class='pagination-link pagination-next' href='/blog/unified-api-keys'>
+        <i class='fa fa-fw fa-angle-right'></i>
+        <span class='pagination-link-text'>Announcing Unified API Keys</span>
+      </a>
+      
+    </div>
+    
+
+  </div>
+</div>
+
+  </div>
+
+  <footer>
+  <div class='container hidden-print footer-no-background'>
+  </div>
+
+  <div class='headroom-large footer-background'>
+    <div class='container'>
+      <div class='row headroom-large footer-menu hidden-print'>
+        <div class='col-xs-5 col-xs-offset-1 col-sm-5 col-sm-offset-0'>
+          <div class='row'>
+            <div class="col-xs-12 col-sm-6">
+              <h6><a href="https://mapzen.com/products/">Projects</a></h6>
+              <ul>
+                <li><a href="https://mapzen.com/products/maps/">Map display</a></li>
+                <li><a href="https://mapzen.com/products/search">Search</a></li>
+                <li><a href="https://mapzen.com/products/search">Autocomplete</a></li>
+                <li><a href="https://mapzen.com/products/turn-by-turn">Turn-by-Turn</a></li>
+                <li><a href="https://mapzen.com/products/isochrone/">Isochrone</a></li>
+                <li><a href="https://mapzen.com/products/map-matching/">Map Matching</a></li>
+                <li><a href="https://mapzen.com/products/optimized-route/">Optimized Route</a></li>
+                <li><a href="https://mapzen.com/products/time-distance-matrix/">Time-distance Matrix</a></li>
+                <li><a href="https://mapzen.com/projects/mobile/">Mobile</a></li>
+                <!--<li><a href="https://mapzen.com/pricing/">Pricing</a></li>-->
+              </ul>
+            </div>
+            <div class="col-xs-12 col-sm-6">
+              <h6><a href="https://mapzen.com/products/#data">Data</a></h6>
+              <ul>
+                <li><a href="https://mapzen.com/projects/vector-tiles/">Vector Tiles</a></li>
+                <li><a href="https://mapzen.com/documentation/terrain-tiles/">Terrain Tiles</a></li>
+                <li><a href='https://whosonfirst.org/'>Who's On First</a></li>
+                <li><a href='https://transit.land/'>Transitland</a></li>
+                <li><a href="https://mapzen.com/data/elevation/">Elevation</a></li>
+                <li><a href="https://mapzen.com/data/metro-extracts/">Metro Extracts</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class='col-xs-5 col-sm-7'>
+          <div class='row'>
+            <div class="col-xs-12 col-sm-5">
+              <h6>Developers</h6>
+              <ul>
+                <!-- <li><a href="https://mapzen.com/dashboard">Developer Platform</a></li> -->
+                <li><a href="https://mapzen.com/documentation/">Documentation</a></li>
+              </ul>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+              <h6>About</h6>
+              <ul>
+                <li><a href="https://mapzen.com/about/">Who we are</a></li>
+                <li><a href="https://mapzen.com/code-of-conduct/">Code of conduct</a></li>
+                <!--<li><a href="https://mapzen.com/jobs/">Jobs</a></li>-->
+                <!--<li><a href="https://mapzen.com/terms/">Terms</a></li>-->
+                <!--<li><a href="https://mapzen.com/privacy/">Privacy policy</a></li>-->
+                <li><a href="https://mapzen.com/media-resources/">Media resources</a></li>
+                <!-- <li><a href="http://status.mapzen.com">Status</a></li> -->
+              </ul>
+            </div>
+            <div class="col-xs-12 col-sm-3">
+              <h6>Hello</h6>
+              <ul>
+                <li><a href="https://mapzen.com/blog/"><i class='fa fa-fw fa-rss'></i>Blog</a></li>
+                <li><a href='https://github.com/mapzen/'><i class='fa fa-fw fa-github'></i>GitHub</a></li>
+                <li><a href='https://twitter.com/mapzen/'><i class='fa fa-fw fa-twitter'></i>Twitter</a></li>
+                <!-- <li><a href='mailto:hello@mapzen.com'><i class='fa fa-fw fa-envelope'></i>E-mail</a></li>  -->
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class='row headroom-large footroom-large'>
+        <div class='col-xs-12 text-center'>
+          <div class="compass-logo"></div>
+          <small class='copyright'>&#169; 2021 Mapzen</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src='/assets/common/styleguide/scripts/mapzen-styleguide.min.js?1624544694359593085'></script>
+</body>
+</html>
